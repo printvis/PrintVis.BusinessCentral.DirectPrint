@@ -6,6 +6,8 @@ table 50100 "PTE Direct Print"
     {
         field(1; "Report ID"; Integer) { DataClassification = SystemMetadata; }
         field(2; "Session Id"; Integer) { DataClassification = SystemMetadata; }
+        field(3; View; Text[2048]) { DataClassification = SystemMetadata; }
+        field(4; "Table ID"; Integer) { DataClassification = SystemMetadata; }
     }
 
     keys { key(pk; "Report ID") { Clustered = true; } }
@@ -28,16 +30,23 @@ table 50100 "PTE Direct Print"
     end;
 
     procedure Print()
-    begin
-        Report.Print("Report ID", '', RecordVariant);
-    end;
-
-    procedure SetRecordVariant(var Value: Variant)
-    begin
-        RecordVariant := Value;
-    end;
-
     var
-        RecordVariant: Variant;
+        RecRef: RecordRef;
+    begin
+        RecRef.Open("Table ID");
+        RecRef.SetView(View);
+        Report.Print("Report ID", '', '', RecRef);
+    end;
 
+    procedure SetRecordView(var Value: Variant)
+    var
+        RecRef: RecordRef;
+    begin
+        if not Value.IsRecordRef then
+            exit;
+
+        RecRef := Value;
+        View := RecRef.GetView(false);
+        "Table ID" := RecRef.Number;
+    end;
 }

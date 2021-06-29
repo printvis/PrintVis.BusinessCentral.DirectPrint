@@ -1,6 +1,5 @@
 codeunit 50100 "PTE Direct Print"
 {
-
     [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforePrintDocument', '', false, false)]
     local procedure MyProcedure(TempReportSelections: Record "Report Selections" temporary; IsGUI: Boolean; RecVarToPrint: Variant; var IsHandled: Boolean)
     var
@@ -10,7 +9,7 @@ codeunit 50100 "PTE Direct Print"
         if not DirectPrint.IsValid() then
             exit;
 
-        DirectPrint.SetRecordVariant(RecVarToPrint);
+        DirectPrint.SetRecordView(RecVarToPrint);
         IsHandled := StartSession(DirectPrint."Session Id", Codeunit::"PTE Direct Print Session", CompanyName, DirectPrint);
     end;
 }
