@@ -36,6 +36,20 @@ table 50100 "PTE Direct Print"
         RecRef.Open("Table ID");
         RecRef.SetView(View);
         Report.Print("Report ID", '', '', RecRef);
+        CreateLog;
+    end;
+
+    local procedure CreateLog()
+    var
+        DirectPrintLog: Record "PTE Direct Print Log";
+    begin
+        DirectPrintLog.Init();
+        DirectPrintLog."Entry No." := 0;
+        DirectPrintLog."Report ID" := "Report ID";
+        DirectPrintLog."Session Id" := "Session Id";
+        DirectPrintLog."Table ID" := "Table ID";
+        DirectPrintLog.View := View;
+        DirectPrintLog.Insert();
     end;
 
     procedure SetRecordView(var Value: Variant)
